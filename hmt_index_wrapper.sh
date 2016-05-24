@@ -16,7 +16,7 @@ set -e
 grep -P '\tgene\t' $2 > genelines.gff3
 
 #strip the potential FASTA line breaks. creates genome_stripped.fa
-mv $1 genome.fa
+cp $1 genome.fa
 python3 /scripts/strip_newlines.py
 
 #create the .genome file
