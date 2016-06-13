@@ -43,6 +43,7 @@ python3 /scripts/parse_promoters.py
 #FIMO barfs ALL the output. that's not good. time for individual FIMOs
 #on individual MEME-friendly motif files too
 mkdir memefiles
+mkdir logos
 #optionally turn Uniprobe into MEME. MEME sucks as a format, Uniprobe is easier
 if [ $9 == '--Uniprobe' ]
 then
@@ -54,9 +55,12 @@ fi
 #now loop over all the individual motif files
 for fid in memefiles/*.txt
 do
+	bfid=$(basename ${fid/.txt/})
 	/root/meme/bin/fimo --text --thresh $6 --verbosity 1 --bgfile promoters.bg $fid promoters.fa >> fimo.txt
 	#this appends to fimo_found.txt
 	python3 /scripts/parse_matrix.py $7 $4 $6
+	#generate logo too while we're at it
+	/root/meme/bin/ceqlogo -i $fid -m 1 -o logos/$bfid.eps
 	#need to wipe fimo.txt to avoid silliness
 	rm fimo.txt
 done
