@@ -4,9 +4,11 @@ import numpy as np
 #soak up current promoters.bed file
 prom = pd.read_csv('promoters.bed',header=None,index_col=None,sep='\t').values
 annot = pd.read_csv('annot.gff3',header=None,index_col=None,sep='\t',comment='#').values
+univ = pd.read_csv('universe.txt',header=None,index_col=None).values
 
-#the order is the same in the promoters.bed as it is in annot.gff3
-#after all, annot.gff3 was used to craft promoters.bed
+#the order is the same in the universe.txt as it is in annot.gff3
+#after all, annot.gff3 was used to craft universe.txt
+#however, promoters.bed might have lost some along the way, so err on the side of caution
 geneinds = []
 for i in np.arange(annot.shape[0]):
 	if 'gene' in annot[i,:]:
@@ -16,8 +18,10 @@ geneinds.append(annot.shape[0]+1)
 
 #loop over the genes
 for i in np.arange(prom.shape[0]):
+	#find which of the geneinds is ours
+	j = np.where(univ==prom[i,3])[0][0]
 	#dig out the subannot and filter it to cds
-	subannot = annot[geneinds[i]:geneinds[i+1],:]
+	subannot = annot[geneinds[j]:geneinds[j+1],:]
 	noncds = []
 	for j in np.arange(subannot.shape[0]):
 		if 'CDS' not in subannot[j,:]:

@@ -44,16 +44,17 @@ then
 	bedtools subtract -a promoters.bed -b genelines.bed > promoters2.bed
 	mv promoters2.bed promoters.bed
 fi
+#check that we have no split promoters. if so, keep the bit closer to the TSS
+python3 /scripts/assess_integrity.py
 #possibly add 5' UTR
 if [ $10 == '--UseUTR' ]
 then
 	python3 /scripts/parse_utrs.py
 fi
 python3 /scripts/parse_promoter_lengths.py
-bedtools getfasta -fi genome_stripped.fa -bed promoters.bed -s -fo promoters_rough.fa
-#this results in some really crappy nomenclature for gene names
-#so let's make promoters.fa ourselves
-python3 /scripts/parse_promoters.py
+bedtools getfasta -fi genome_stripped.fa -bed promoters.bed -s -fo promoters_rough.fa -name
+#no longer needed - -name does this
+#python3 /scripts/parse_promoters.py
 
 #now we can actually FIMO our way to victory
 /root/meme/bin/fasta-get-markov promoters.fa > promoters.bg
