@@ -52,7 +52,7 @@ then
 	python3 /scripts/parse_utrs.py
 fi
 python3 /scripts/parse_promoter_lengths.py
-bedtools getfasta -fi genome_stripped.fa -bed promoters.bed -s -fo promoters_rough.fa -name
+bedtools getfasta -fi genome_stripped.fa -bed promoters.bed -s -fo promoters.fa -name
 #no longer needed - -name does this
 #python3 /scripts/parse_promoters.py
 
