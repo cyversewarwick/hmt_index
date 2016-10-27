@@ -99,6 +99,5 @@ rm genome_stripped.fa.fai
 rm promoters.bed
 rm promoters.bg
 rm promoters.fa
-rm promoters_rough.fa
 rm promoter_lengths.txt
 rm fimo.txt
