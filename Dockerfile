@@ -66,5 +66,9 @@ RUN easy_install3 pip && pip install pandas
 RUN mkdir /scripts
 COPY scripts /scripts/
 
+#set up analysis crash text file
+RUN apt-get -y install git
+RUN git clone https://github.com/cyversewarwick/analysis_crash.git
+
 # ...I think that's it for now?
 ENTRYPOINT ["bash", "/scripts/hmt_index_tarwrapper.sh"]
