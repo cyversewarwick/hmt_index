@@ -96,6 +96,7 @@ then
 fi
 rm bedgenome.genome
 rm genelines.bed
+rm genelines2.bed
 rm genelines.gff3
 rm genome.fa
 rm genome_stripped.fa
