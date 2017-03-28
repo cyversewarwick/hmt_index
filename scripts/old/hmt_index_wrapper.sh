@@ -33,28 +33,24 @@ cut -f 1-2 genome_stripped.fa.fai > bedgenome.genome
 
 #parse up the .bed for promoter extraction
 python3 /scripts/parse_genelines.py $3
-python3 /scripts/parse_utrs_bo.py
 #the python script takes the genelines.gff3 file and makes a genelines.bed out of it
 #now that we have genelines.bed, we can pull out the gene IDs to use as our universe
 cut -f 4 genelines.bed > universe.txt
 #prepare promoter region information
 bedtools flank -l $4 -r 0 -s -i genelines.bed -g bedgenome.genome > promoters.bed
+#remove overlapping promoter chunks
+if [ $8 == '--NoOverlap' ]
+then
+	bedtools subtract -a promoters.bed -b genelines.bed > promoters2.bed
+	mv promoters2.bed promoters.bed
+fi
+#check that we have no split promoters. if so, keep the bit closer to the TSS
+python3 /scripts/assess_integrity.py
 #possibly add 5' UTR
 if [ $10 == '--UseUTR' ]
 then
 	python3 /scripts/parse_utrs.py
 fi
-#remove overlapping promoter chunks
-if [ $8 == '--NoOverlap' ]
-then
-	#genelines2.bed is a CDS-only region file created in parse_utrs_bo.py
-	python3 /scripts/subtract.py --Input promoters.bed --Remove genelines2.bed --Output promoters2.bed --Kick
-	python3 /scripts/subtract.py --Input utr5.bed --Remove genelines2.bed --Output utr52.bed
-	mv promoters2.bed promoters.bed
-	mv utr5w.bed utr5.bed
-fi
-#check that we have no split promoters. if so, keep the bit closer to the TSS
-python3 /scripts/assess_integrity.py
 python3 /scripts/parse_promoter_lengths.py
 bedtools getfasta -fi genome_stripped.fa -bed promoters.bed -s -fo promoters.fa -name
 #no longer needed - -name does this
