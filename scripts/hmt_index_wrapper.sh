@@ -51,7 +51,7 @@ then
 	python3 /scripts/subtract.py --Input promoters.bed --Remove genelines2.bed --Output promoters2.bed --Kick
 	python3 /scripts/subtract.py --Input utr5.bed --Remove genelines2.bed --Output utr52.bed
 	mv promoters2.bed promoters.bed
-	mv utr5w.bed utr5.bed
+	mv utr52.bed utr5.bed
 fi
 #check that we have no split promoters. if so, keep the bit closer to the TSS
 python3 /scripts/assess_integrity.py
